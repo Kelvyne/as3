@@ -1,0 +1,6 @@
+{
+	"ImportPath": "github.com/kelvyne/as3",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v75",
+	"Deps": []
+}
