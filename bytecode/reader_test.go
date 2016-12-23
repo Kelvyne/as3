@@ -3,6 +3,7 @@ package bytecode
 import (
 	"bytes"
 	"io"
+	"reflect"
 	"testing"
 )
 
@@ -271,6 +272,12 @@ func Test_reader_ReadS32(t *testing.T) {
 			false,
 		},
 		{
+			"five bytes",
+			fields{bytes.NewReader([]byte{0x90, 0xaf, 0xee, 0xdf, 0x04})},
+			1274779536,
+			false,
+		},
+		{
 			"negative multi bytes",
 			fields{bytes.NewReader([]byte{0xff, 0x7f})},
 			-1,
@@ -341,6 +348,59 @@ func Test_reader_ReadD64(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("reader.ReadD64() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_reader_ReadBytes(t *testing.T) {
+	type fields struct {
+		Reader io.Reader
+	}
+	type args struct {
+		n uint32
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{
+			"complete",
+			fields{bytes.NewReader([]byte{0x01, 0x02, 0x03})},
+			args{3},
+			[]byte{0x01, 0x02, 0x03},
+			false,
+		},
+		{
+			"incomplete",
+			fields{bytes.NewReader([]byte{0x01, 0x02})},
+			args{3},
+			nil,
+			true,
+		},
+		{
+			"EOF",
+			fields{&bytes.Buffer{}},
+			args{3},
+			nil,
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &reader{
+				Reader: tt.fields.Reader,
+			}
+			got, err := r.ReadBytes(tt.args.n)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("reader.ReadBytes() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("reader.ReadBytes() = %v, want %v", got, tt.want)
 			}
 		})
 	}

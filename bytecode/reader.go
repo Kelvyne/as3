@@ -17,6 +17,7 @@ type Reader interface {
 	ReadU32() (uint32, error)
 	ReadS32() (int32, error)
 	ReadD64() (float64, error)
+	ReadBytes(n uint32) ([]byte, error)
 }
 
 type reader struct {
@@ -60,17 +61,17 @@ func (r *reader) ReadS24() (int32, error) {
 func (r *reader) readVariableLength() (v uint32, n uint8, err error) {
 	var b uint8 = 0x80
 	for b>>7 != 0 {
+		if n >= 5 {
+			err = ErrMalformedVariableInteger
+			v = 0
+			return
+		}
 		b, err = r.ReadU8()
 		if err != nil {
 			return
 		}
 		v |= (uint32(b & 0x7f)) << (n * 7)
 		n++
-		if n >= 5 {
-			err = ErrMalformedVariableInteger
-			v = 0
-			return
-		}
 	}
 	return
 }
@@ -102,4 +103,13 @@ func (r *reader) ReadD64() (float64, error) {
 	var v float64
 	err := r.read(&v)
 	return v, err
+}
+
+func (r *reader) ReadBytes(n uint32) ([]byte, error) {
+	b := make([]byte, n)
+	_, err := io.ReadFull(r.Reader, b)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }
