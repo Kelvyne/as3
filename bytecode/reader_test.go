@@ -253,9 +253,9 @@ func Test_reader_ReadS32(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			"valid",
-			fields{bytes.NewReader([]byte{0x5a})},
-			0x5a,
+			"positive",
+			fields{bytes.NewReader([]byte{0x3a})},
+			0x3a,
 			false,
 		},
 		{
