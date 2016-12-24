@@ -18,31 +18,45 @@ func TestParse(t *testing.T) {
 	reader := NewReader(openFixture(t, "frame1"))
 	a, err := Parse(reader)
 	if err != nil {
-		t.Fatalf("expected non-nil, got %+v", err)
+		t.Fatalf("expected non-nil, got %v", err)
 	}
-	fmt.Printf("Major %v Minor %v\n", a.MajorVersion, a.MinorVersion)
 
 	cpool := &a.ConstantPool
 
-	if cpool.IntCount != 2926 {
-		t.Errorf("expected 2926, got %v", cpool.IntCount)
+	if len(cpool.Integers) != 2926 {
+		t.Errorf("expected 2926, got %v", len(cpool.Integers))
 	}
-	if cpool.UIntCount != 15 {
-		t.Errorf("expected 15, got %v", cpool.UIntCount)
+	if len(cpool.UIntegers) != 15 {
+		t.Errorf("expected 15, got %v", len(cpool.UIntegers))
 	}
-	if cpool.DoubleCount != 857 {
-		t.Errorf("expected 857, got %v", cpool.DoubleCount)
+	if len(cpool.Doubles) != 857 {
+		t.Errorf("expected 857, got %v", len(cpool.Doubles))
 	}
-	if cpool.StringCount != 51453 {
-		t.Errorf("expected 51453, got %v", cpool.StringCount)
+	if len(cpool.Strings) != 51453 {
+		t.Errorf("expected 51453, got %v", len(cpool.Strings))
 	}
-	if cpool.NamespaceCount != 11524 {
-		t.Errorf("expected 11524, got %v", cpool.NamespaceCount)
+	if len(cpool.Namespaces) != 11524 {
+		t.Errorf("expected 11524, got %v", len(cpool.Namespaces))
 	}
-	if cpool.NsSetCount != 2226 {
-		t.Errorf("expected 2226, got %v", cpool.NsSetCount)
+	if len(cpool.NsSets) != 2226 {
+		t.Errorf("expected 2226, got %v", len(cpool.NsSets))
 	}
-	if cpool.MultinameCount != 48187 {
-		t.Errorf("expected 48187, got %v", cpool.MultinameCount)
+	if len(cpool.Multinames) != 48187 {
+		t.Errorf("expected 48187, got %v", len(cpool.Multinames))
+	}
+	if len(a.Methods) != 46498 {
+		t.Errorf("expected 46498, got %v", len(a.Methods))
+	}
+	if len(a.Metadatas) != 104 {
+		t.Errorf("expected 104, got %v", len(a.Metadatas))
+	}
+	if len(a.Instances) != 5143 {
+		t.Errorf("expected 5143, got %v", len(a.Instances))
+	}
+	if len(a.Scripts) != 4442 {
+		t.Errorf("expected 4442, got %v", len(a.Scripts))
+	}
+	if len(a.MethodBodies) != 45243 {
+		t.Errorf("expected 45243, got %v", len(a.MethodBodies))
 	}
 }
