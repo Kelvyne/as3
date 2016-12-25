@@ -89,54 +89,12 @@ type NsSetInfo struct {
 }
 
 // MultinameInfo represents a multiname info data structure
-type MultinameInfo interface {
-	Kind() uint8
-}
-
-type multinameInfo struct {
-	kind uint8
-}
-
-func (m multinameInfo) Kind() uint8 {
-	return m.kind
-}
-
-// QName represents a qualified name data structure
-type QName struct {
-	multinameInfo
-	Namespace uint32
-	Name      uint32
-}
-
-// RTQName represents a real time qualified name data structure
-type RTQName struct {
-	multinameInfo
-	Name uint32
-}
-
-// RTQNameL represents a late real time qualified name data structure
-type RTQNameL struct {
-	multinameInfo
-}
-
-// Multiname represents a multiname data structure
-type Multiname struct {
-	multinameInfo
-	Name  uint32
-	NsSet uint32
-}
-
-// MultinameL represents a late multiname data structure
-type MultinameL struct {
-	multinameInfo
-	NsSet uint32
-}
-
-// Typename represents a typename data structure
-type Typename struct {
-	multinameInfo
-	Name   uint32
-	Params []uint32
+type MultinameInfo struct {
+	Kind      uint8
+	Name      uint32   // reserved for QName, RTQName, Multiname and Typename
+	Namespace uint32   // reserved for Namespace
+	NsSet     uint32   // reserved for Multiname and MultinameL
+	Params    []uint32 // reserved for Typename
 }
 
 // MethodInfo represents a method_info data structure

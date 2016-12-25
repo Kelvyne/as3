@@ -232,10 +232,10 @@ func (p *parser) parseCpoolMultiname() (slice []MultinameInfo, err error) {
 func (p *parser) parseMultinameInfo() (MultinameInfo, error) {
 	kind, err := p.r.ReadU8()
 	if err != nil {
-		return nil, ErrUnknownMultinameKind
+		return MultinameInfo{}, ErrUnknownMultinameKind
 	}
 
-	parsers := map[uint8]func(multinameInfo) (MultinameInfo, error){
+	parsers := map[uint8]func(*MultinameInfo) error{
 		KindQName: p.parseQName, KindQNameA: p.parseQName,
 		KindRTQName: p.parseRTQName, KindRTQNameA: p.parseRTQName,
 		KindRTQNameL: p.parseRTQNameL, KindRTQNameLA: p.parseRTQNameL,
@@ -245,78 +245,86 @@ func (p *parser) parseMultinameInfo() (MultinameInfo, error) {
 	}
 	parser, ok := parsers[kind]
 	if !ok {
-		return nil, ErrUnknownMultinameKind
+		return MultinameInfo{}, ErrUnknownMultinameKind
 	}
-	b := multinameInfo{kind}
-	mInfo, err := parser(b)
+	b := MultinameInfo{Kind: kind}
+	err = parser(&b)
 	if err != nil {
-		return nil, err
+		return MultinameInfo{}, err
 	}
-	return mInfo, nil
+	return b, nil
 }
 
-func (p *parser) parseQName(b multinameInfo) (MultinameInfo, error) {
+func (p *parser) parseQName(b *MultinameInfo) error {
 	ns, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	name, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return QName{b, ns, name}, nil
+	b.Namespace = ns
+	b.Name = name
+	return nil
 }
 
-func (p *parser) parseRTQName(b multinameInfo) (MultinameInfo, error) {
+func (p *parser) parseRTQName(b *MultinameInfo) error {
 	name, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return RTQName{b, name}, nil
+	b.Name = name
+	return nil
 }
 
-func (p *parser) parseRTQNameL(b multinameInfo) (MultinameInfo, error) {
-	return RTQNameL{b}, nil
+func (p *parser) parseRTQNameL(b *MultinameInfo) error {
+	return nil
 }
 
-func (p *parser) parseMultiname(b multinameInfo) (MultinameInfo, error) {
+func (p *parser) parseMultiname(b *MultinameInfo) error {
 	name, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	nsSet, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return Multiname{b, name, nsSet}, nil
+	b.Name = name
+	b.NsSet = nsSet
+	return nil
 }
 
-func (p *parser) parseMultinameL(b multinameInfo) (MultinameInfo, error) {
+func (p *parser) parseMultinameL(b *MultinameInfo) error {
 	nsSet, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return MultinameL{b, nsSet}, nil
+	b.NsSet = nsSet
+	return nil
 }
 
-func (p *parser) parseTypename(b multinameInfo) (MultinameInfo, error) {
+func (p *parser) parseTypename(b *MultinameInfo) error {
 	name, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	paramLength, err := p.r.ReadU30()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	params := make([]uint32, paramLength)
 	for i := range params {
 		param, err := p.r.ReadU30()
 		if err != nil {
-			return nil, err
+			return err
 		}
 		params[i] = param
 	}
-	return Typename{b, name, params}, nil
+	b.Name = name
+	b.Params = params
+	return nil
 }
 
 func (p *parser) ParseCpool() (CpoolInfo, error) {
