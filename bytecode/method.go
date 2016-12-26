@@ -3,6 +3,7 @@ package bytecode
 import "bytes"
 import "io"
 import "errors"
+import "fmt"
 
 // InstrOperand is the type of an operand
 type InstrOperand uint8
@@ -210,7 +211,7 @@ func disassembleInstrOperand(r Reader, t InstrOperand) (uint32, error) {
 func dissassembleInstr(r Reader, code uint8) (Instr, error) {
 	model, ok := Instructions[code]
 	if !ok {
-		return Instr{}, ErrUnknownInstruction
+		return Instr{}, fmt.Errorf("unknown instruction %v", code)
 	}
 	var operands []uint32
 	for _, t := range model.Operands {
@@ -260,8 +261,9 @@ func (m *MethodBodyInfo) Disassemble() (err error) {
 
 	}
 	if err != nil && err != io.EOF {
-		return err
+		return
 	}
 	m.Instructions = instructions
-	return nil
+	err = nil
+	return
 }
