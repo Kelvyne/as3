@@ -238,17 +238,18 @@ func dissassembleInstr(r Reader, code uint8) (Instr, error) {
 }
 
 // Disassemble parses the instructions of the method body
-func (m *MethodBodyInfo) Disassemble() error {
+func (m *MethodBodyInfo) Disassemble() (err error) {
 	base := bytes.NewReader(m.Code)
 	r := NewReader(base)
 	var instructions []Instr
-	var err error
 	for {
-		code, err := r.ReadU8()
+		var code uint8
+		var instr Instr
+		code, err = r.ReadU8()
 		if err != nil {
 			break
 		}
-		instr, err := dissassembleInstr(r, code)
+		instr, err = dissassembleInstr(r, code)
 		if err != nil {
 			if err == io.EOF {
 				err = io.ErrUnexpectedEOF
