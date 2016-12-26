@@ -2,17 +2,17 @@ package bytecode
 
 // These constants are possible value of the kind field of a MultinameInfo struct
 const (
-	KindQName       = 0x07
-	KindQNameA      = 0x0d
-	KindRTQName     = 0x0f
-	KindRTQNameA    = 0x10
-	KindRTQNameL    = 0x11
-	KindRTQNameLA   = 0x12
-	KindMultiname   = 0x09
-	KindMultinameA  = 0x0e
-	KindMultinameL  = 0x1b
-	KindMultinameLA = 0x1c
-	KindTypename    = 0x1d
+	MultinameKindQName       = 0x07
+	MultinameKindQNameA      = 0x0d
+	MultinameKindRTQName     = 0x0f
+	MultinameKindRTQNameA    = 0x10
+	MultinameKindRTQNameL    = 0x11
+	MultinameKindRTQNameLA   = 0x12
+	MultinameKindMultiname   = 0x09
+	MultinameKindMultinameA  = 0x0e
+	MultinameKindMultinameL  = 0x1b
+	MultinameKindMultinameLA = 0x1c
+	MultinameKindTypename    = 0x1d
 )
 
 // These constants are possible flags of the flags field of a MethodInfo struct
@@ -151,6 +151,9 @@ type TraitsInfo struct {
 	Metadatas []uint32
 }
 
+// GetType isolates the type (4 lower bits) of a TraitsInfo.
+func (t TraitsInfo) GetType() uint8 { return t.Kind & 0x0f }
+
 // InstanceInfo represents a instance_info data structure
 type InstanceInfo struct {
 	Name        uint32
@@ -184,6 +187,7 @@ type MethodBodyInfo struct {
 	Code            []byte
 	Exceptions      []ExceptionInfo
 	Traits          []TraitsInfo
+	Instructions    []Instr
 }
 
 // ExceptionInfo represents a exception_info data structure

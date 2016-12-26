@@ -15,7 +15,13 @@ func openFixture(t *testing.T, name string) *os.File {
 }
 
 func TestParse(t *testing.T) {
-	reader := NewReader(openFixture(t, "frame1"))
+	file := openFixture(t, "frame1")
+	defer func() {
+		if err := file.Close(); err != nil {
+			t.Errorf("file.close: %v", err)
+		}
+	}()
+	reader := NewReader(file)
 	a, err := Parse(reader)
 	if err != nil {
 		t.Fatalf("expected non-nil, got %v", err)

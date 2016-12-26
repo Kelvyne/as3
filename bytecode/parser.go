@@ -236,12 +236,12 @@ func (p *parser) parseMultinameInfo() (MultinameInfo, error) {
 	}
 
 	parsers := map[uint8]func(*MultinameInfo) error{
-		KindQName: p.parseQName, KindQNameA: p.parseQName,
-		KindRTQName: p.parseRTQName, KindRTQNameA: p.parseRTQName,
-		KindRTQNameL: p.parseRTQNameL, KindRTQNameLA: p.parseRTQNameL,
-		KindMultiname: p.parseMultiname, KindMultinameA: p.parseMultiname,
-		KindMultinameL: p.parseMultinameL, KindMultinameLA: p.parseMultinameL,
-		KindTypename: p.parseTypename,
+		MultinameKindQName: p.parseQName, MultinameKindQNameA: p.parseQName,
+		MultinameKindRTQName: p.parseRTQName, MultinameKindRTQNameA: p.parseRTQName,
+		MultinameKindRTQNameL: p.parseRTQNameL, MultinameKindRTQNameLA: p.parseRTQNameL,
+		MultinameKindMultiname: p.parseMultiname, MultinameKindMultinameA: p.parseMultiname,
+		MultinameKindMultinameL: p.parseMultinameL, MultinameKindMultinameLA: p.parseMultinameL,
+		MultinameKindTypename: p.parseTypename,
 	}
 	parser, ok := parsers[kind]
 	if !ok {
@@ -780,7 +780,7 @@ func (p *parser) ParseMethodBody() (MethodBodyInfo, error) {
 	if err != nil {
 		return MethodBodyInfo{}, err
 	}
-	return MethodBodyInfo{method, maxStack, localCount, initScopeLength, maxScopeLength, code, exceptions, traits}, nil
+	return MethodBodyInfo{method, maxStack, localCount, initScopeLength, maxScopeLength, code, exceptions, traits, nil}, nil
 }
 
 func (p *parser) ParseMethodBodies() ([]MethodBodyInfo, error) {
