@@ -21,9 +21,7 @@ func (c *CpoolInfo) MultinameString(m uint32) string {
 	info := c.Multinames[m]
 	switch info.Kind {
 	case MultinameKindQName, MultinameKindQNameA:
-		return fmt.Sprintf("[%v].%v",
-			c.NamespaceString(info.Namespace),
-			c.Strings[info.Name])
+		return c.Strings[info.Name]
 	case MultinameKindRTQName, MultinameKindRTQNameA:
 		return fmt.Sprintf("[*].%v", c.Strings[info.Name])
 	case MultinameKindRTQNameL, MultinameKindRTQNameLA:
