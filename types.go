@@ -16,6 +16,7 @@ type Class struct {
 	InstanceInfo   bytecode.InstanceInfo
 	ClassInfo      bytecode.ClassInfo
 	Name           string
+	Namespace      string
 	SuperName      string
 	Interfaces     []string
 	InstanceTraits TraitsObject

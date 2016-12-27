@@ -47,7 +47,11 @@ func (l *linker) LinkClasses() ([]Class, error) {
 func (l *linker) LinkClass(index int) (c Class, err error) {
 	c.InstanceInfo = l.abc.Instances[index]
 	c.ClassInfo = l.abc.Classes[index]
-	c.Name = l.abc.ConstantPool.MultinameString(c.InstanceInfo.Name)
+
+	name := l.abc.ConstantPool.Multinames[c.InstanceInfo.Name]
+	ns := l.abc.ConstantPool.Namespaces[name.Namespace]
+	c.Name = l.abc.ConstantPool.Strings[name.Name]
+	c.Namespace = l.abc.ConstantPool.Strings[ns.Name]
 	c.SuperName = l.abc.ConstantPool.MultinameString(c.InstanceInfo.SuperName)
 	c.Interfaces = make([]string, len(c.InstanceInfo.Interfaces))
 	for i := range c.Interfaces {
