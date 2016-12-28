@@ -52,6 +52,17 @@ const (
 	TraitsInfoAttributeMetadata
 )
 
+// These constants are possible values of the kind field of a NamespaceInfo struct
+const (
+	NamespaceKindNamespace          = 0x08
+	NamespaceKindPackageNamespace   = 0x16
+	NamespaceKindPackageInternalNs  = 0x17
+	NamespaceKindProtectedNamespace = 0x18
+	NamespaceKindExplicitNamespace  = 0x19
+	NamespaceKindStaticProtectedNs  = 0x1A
+	NamespaceKindPrivateNs          = 0x05
+)
+
 // AbcFile is the root structure of an AS3 file
 type AbcFile struct {
 	MinorVersion uint16
