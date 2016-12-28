@@ -6,7 +6,7 @@ import (
 
 // AbcFile represents a linked AbcFile
 type AbcFile struct {
-	src     *bytecode.AbcFile
+	Source  *bytecode.AbcFile
 	Classes []Class
 	Methods []Method
 }
