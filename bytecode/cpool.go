@@ -4,7 +4,8 @@ import "fmt"
 
 func typenameString(c *CpoolInfo, info MultinameInfo) string {
 	var str string
-	str += c.Strings[info.Name]
+	name := c.Multinames[info.Name]
+	str += c.Strings[name.Name]
 	str += "<"
 	for i, p := range info.Params {
 		if i > 0 {
