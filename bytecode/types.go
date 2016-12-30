@@ -63,6 +63,25 @@ const (
 	NamespaceKindPrivateNs          = 0x05
 )
 
+// These constants are possible values for the vkind field of a slot/constant TraitsInfo struct
+const (
+	SlotKindInt                = 0x03
+	SlotKindUInt               = 0x04
+	SlotKindDouble             = 0x06
+	SlotKindUtf8               = 0x01
+	SlotKindTrue               = 0x0b
+	SlotKindFalse              = 0x0a
+	SlotKindNull               = 0x0c
+	SlotKindUndefined          = 0x00
+	SlotKindNamespace          = 0x08
+	SlotKindPackageNamespace   = 0x16
+	SlotKindPackageInternalNs  = 0x17
+	SlotKindProtectedNamespace = 0x18
+	SlotKindExplicitNamespace  = 0x19
+	SlotKindStaticProtectedNs  = 0x1a
+	SlotKindPrivateNs          = 0x05
+)
+
 // AbcFile is the root structure of an AS3 file
 type AbcFile struct {
 	MinorVersion uint16
