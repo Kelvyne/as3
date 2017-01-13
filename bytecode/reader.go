@@ -3,6 +3,7 @@ package bytecode
 import "io"
 import "encoding/binary"
 import "errors"
+import "math"
 
 // ErrMalformedVariableInteger means that an encoded variable integer is
 // malformed (its length is >5 bytes)
@@ -86,17 +87,21 @@ func (r *reader) ReadU30() (uint32, error) {
 }
 
 func (r *reader) ReadS32() (int32, error) {
-	v, n, err := r.readVariableLength()
+	v, _, err := r.readVariableLength()
 	if err != nil {
 		return 0, err
 	}
 	// If the higher bit of the last read byte is 1, it means we need to
 	// expand the sign (v is negative)
-	if v&(1<<(n*7-1)) != 0 {
+	// NOTE: The condition used to be this :
+	// if v&(1<<(n*7)) != 0 {
+	// but it seems that we need to check the 31th bit only
+	iv := int32(v)
+	if v&(1<<31) != 0 {
 		// shift should be n*7 + 1 but we know n*7th bit is set
-		v |= 0xffffffff << (n * 7)
+		iv = -(iv & math.MaxInt32)
 	}
-	return int32(v), nil
+	return iv, nil
 }
 
 func (r *reader) ReadD64() (float64, error) {
