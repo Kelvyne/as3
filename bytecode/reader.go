@@ -92,7 +92,10 @@ func (r *reader) ReadS32() (int32, error) {
 	}
 	// If the higher bit of the last read byte is 1, it means we need to
 	// expand the sign (v is negative)
-	if v&(1<<(n*7-1)) != 0 {
+	// NOTE: The condition used to be this :
+	// if v&(1<<(n*7)) != 0 {
+	// but it seems that we need to check the 31th bit only
+	if v&(1<<31) != 0 {
 		// shift should be n*7 + 1 but we know n*7th bit is set
 		v |= 0xffffffff << (n * 7)
 	}
