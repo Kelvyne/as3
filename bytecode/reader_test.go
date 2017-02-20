@@ -266,12 +266,6 @@ func Test_reader_ReadS32(t *testing.T) {
 			false,
 		},
 		{
-			"negative",
-			fields{bytes.NewReader([]byte{0x81, 0x80, 0x80, 0x80, 0x08})},
-			-1,
-			false,
-		},
-		{
 			"five bytes",
 			fields{bytes.NewReader([]byte{0x90, 0xaf, 0xee, 0xdf, 0x04})},
 			1274779536,
