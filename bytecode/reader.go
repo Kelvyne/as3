@@ -3,7 +3,6 @@ package bytecode
 import "io"
 import "encoding/binary"
 import "errors"
-import "math"
 
 // ErrMalformedVariableInteger means that an encoded variable integer is
 // malformed (its length is >5 bytes)
@@ -96,11 +95,8 @@ func (r *reader) ReadS32() (int32, error) {
 	// NOTE: The condition used to be this :
 	// if v&(1<<(n*7)) != 0 {
 	// but it seems that we need to check the 31th bit only
+	// the int32 cast also expands the last bit if needed
 	iv := int32(v)
-	if v&(1<<31) != 0 {
-		// shift should be n*7 + 1 but we know n*7th bit is set
-		iv = -(iv & math.MaxInt32)
-	}
 	return iv, nil
 }
 
