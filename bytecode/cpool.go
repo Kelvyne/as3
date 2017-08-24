@@ -19,6 +19,9 @@ func typenameString(c *CpoolInfo, info MultinameInfo) string {
 
 // MultinameString converts a multiname to a string
 func (c *CpoolInfo) MultinameString(m uint32) string {
+	if int(m) >= len(c.Multinames) {
+		return ""
+	}
 	info := c.Multinames[m]
 	switch info.Kind {
 	case MultinameKindQName, MultinameKindQNameA:
