@@ -7,6 +7,7 @@ import (
 
 // Writer is used to serialize as3 bytecode
 type Writer interface {
+	io.Writer
 	WriteU8(uint8) error
 	WriteU16(uint16) error
 	WriteS24(int32) error
