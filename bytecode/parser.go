@@ -340,7 +340,11 @@ func (p *parser) ParseCpool() (CpoolInfo, error) {
 	if err != nil {
 		return CpoolInfo{}, err
 	}
+
 	strings, err := p.parseCpoolString()
+	if err != nil {
+		return CpoolInfo{}, err
+	}
 
 	namespaces, err := p.parseCpoolNamespace()
 	if err != nil {
